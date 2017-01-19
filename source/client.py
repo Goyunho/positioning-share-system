@@ -8,6 +8,7 @@ import time
 # client class
 class Client(BasicNet):
     def run(self):
+        self.socket.connect(self.addr)
         while True:
             try:
                 self.socket.send(b'Hello, python') #문자를 보냄

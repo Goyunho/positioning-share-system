@@ -22,7 +22,7 @@ class BasicNet():
             self.close()
         else:
             self.addr = (host, port)
-            self.socket.bind(self.addr)
+
 
     def run(self):
         try:
