@@ -8,14 +8,14 @@ from basicNet import BasicNet
 class Server(BasicNet):
     def run(self):
         self.socket.bind(self.addr)
+        self.socket.listen(1)
         try:
-            self.socket.listen(10)
-            conn, addr = self.socket.accept()
-            print('Connected by', addr)
             while True:
+                conn, addr = self.socket.accept()
+                print('Connected by', addr)
                 data=conn.recv(1024)
                 if not data: break
-                print("Received data from", addr, data)
+                print("Received data from", addr, repr(data))
                 self.socket.send(b"ok") #받은 데이터를 그대로 클라이언트에 전송
         except KeyboardInterrupt :
             return
