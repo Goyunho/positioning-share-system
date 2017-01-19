@@ -15,7 +15,8 @@ class Server(BasicNet):
             while True:
                 data=conn.recv(1024)
                 if not data: break
-                self.socket.send(data, data) #받은 데이터를 그대로 클라이언트에 전송
+                print("Received data from", addr, data)
+                self.socket.send(b"ok") #받은 데이터를 그대로 클라이언트에 전송
         except KeyboardInterrupt :
             return
 
