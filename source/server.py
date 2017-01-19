@@ -15,13 +15,13 @@ class Server(BasicNet):
             while True:
                 data=conn.recv(1024)
                 if not data: break
-                self.socket.send(data+'ok') #받은 데이터를 그대로 클라이언트에 전송
+                self.socket.send(data, data) #받은 데이터를 그대로 클라이언트에 전송
         except KeyboardInterrupt :
             return
 
 
 if __name__ == '__main__':
-    ser = Server('', 9001, 255*32)
+    ser = Server('', 9000, 255*32)
     print("socket is ready.")
     print("run...")
     ser.run()
