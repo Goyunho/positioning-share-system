@@ -20,7 +20,7 @@ class Client(BasicNet):
 
 if __name__ == '__main__':
     cli = Client('127.0.0.1', 9000, 255*32)
-    print("서버에 접속을 시도합니다.")
+    print("connecting server...")
     try:
         cli.run()
     except Exception as e:

@@ -1,6 +1,6 @@
 # server side source
 
-# socket ê³¼ select ëª¨ë“ˆ ì„í¬íŠ¸
+# socket °ú select ¸ğµâ ÀÓÆ÷Æ®
 from basicNet import BasicNet
 
 
@@ -14,15 +14,15 @@ class Server(BasicNet):
             while True:
                 data=conn.recv(1024)
                 if not data: break
-                self.socket.send(data+'ok') #ë°›ì€ ë°ì´í„°ë¥¼ ê·¸ëŒ€ë¡œ í´ë¼ì´ì–¸íŠ¸ì— ì „ì†¡
+                self.socket.send(data+'ok') #¹ŞÀº µ¥ÀÌÅÍ¸¦ ±×´ë·Î Å¬¶óÀÌ¾ğÆ®¿¡ Àü¼Û
         except KeyboardInterrupt :
             return
 
 
 if __name__ == '__main__':
     ser = Server('', 9000, 255*32)
-    print("ì†Œì¼“ì„ ì—´ì—ˆìŠµë‹ˆë‹¤.")
-    print("ì‹¤í–‰...")
+    print("socket is ready.")
+    print("run...")
     ser.run()
     ser.close()
-    print("ì¢…ë£Œí•˜ì˜€ìŠµë‹ˆë‹¤.")
+    print("closed.")
