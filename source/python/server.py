@@ -6,8 +6,11 @@ from basicNet import BasicNet
 
 # Server class
 class Server(BasicNet):
-    def run(self):
+    def __init__(self, host, port, buffersize):
+        super.__init__(self, host, port, buffersize)
         self.socket.bind(self.addr)
+
+    def run(self):
         self.socket.listen(1)
         conn, addr = self.socket.accept()
         print('Connected by', addr)
