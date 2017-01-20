@@ -1,3 +1,5 @@
+!<arch>
+aria.c/         1484922524  0     0     100644  18173     `
 /*
  * A 32-bit implementation for ARIA
  *
@@ -47,11 +49,11 @@ typedef unsigned int  Word;
 #undef LITTLE_ENDIAN
 #else
 #ifndef LITTLE_ENDIAN
-/*#error In order to compile this, you have to	\
+#error In order to compile this, you have to	\
   define either LITTLE_ENDIAN or BIG_ENDIAN.	\
   If unsure, try define either of one and run	\
   checkEndian() function to see if your guess	\
-  is correct.*/
+  is correct.
 #endif
 #endif
 
@@ -540,3 +542,4 @@ int main(int argc, char **argv) {
   ARIA_test();
   return 0;
 }
+
