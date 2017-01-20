@@ -33,8 +33,8 @@
  * 함수에서 ENDIAN 확인을 하기 때문에 올바른 선택이었는지를
  * 점검할 수 있습니다. */
 
-/* #define LITTLE_ENDIAN */
-/* #define BIG_ENDIAN */
+#define LITTLE_ENDIAN
+//#define BIG_ENDIAN
 
 /*********************************************************/
 
@@ -536,7 +536,9 @@ encrypted ciphertext.\n");
   printf("END   testing the roundtrip.\n");
 }
 
+/*
 int main(int argc, char **argv) {
   ARIA_test();
   return 0;
 }
+*/

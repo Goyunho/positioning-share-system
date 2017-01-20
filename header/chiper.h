@@ -1,3 +1,9 @@
+typedef unsigned char Byte;
+typedef unsigned int  Word;
+
+void printBlockOfLength(Byte *b, int len);
+void printBlock(Byte *b);
+
 /* 암호화 함수.
  * const Byte *i: 입력
  * int Nr: 라운드 수
@@ -18,4 +24,4 @@ int EncKeySetup(const Byte *mk, Byte *rk, int keyBits);
  * Byte *rk: 라운드 키
  * int keyBits: 마스터 키의 길이
  */
-int DecKeySetup(const Byte *mk, Byte *rk, int keyBits)
+int DecKeySetup(const Byte *mk, Byte *rk, int keyBits);
