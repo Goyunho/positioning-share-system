@@ -7,12 +7,13 @@
 void init(){
   Byte *b;
   const Word NUMBER=0x00000042;
-  
+
   printf("BEGIN testing endianness...\n");
   printf("Since you are running this, it means that you have defined \
 either LITTLE_ENDIAN or BIG_ENDIAN.  Let's see if you were correct.\n");
   b=(Byte *)(&NUMBER);
   if (b[0]==0x42) {
+#undef BIG_ENDIAN
     printf("We are on LITTLE_ENDIAN platform.\n");
 #ifdef BIG_ENDIAN
     printf("WARNING: BIG_ENDIAN defined on LITTLE_ENDIAN platform.\n");
@@ -21,6 +22,7 @@ either LITTLE_ENDIAN or BIG_ENDIAN.  Let's see if you were correct.\n");
     printf("Okay.  You were correct.\n");
 #endif
   } else {
+#undef LITTLE_ENDIAN
     printf("We are on BIG_ENDIAN platform.\n");
 #ifdef LITTLE_ENDIAN
     printf("WARNING: LITTLE_ENDIAN defined on BIG_ENDIAN platform.\n");
@@ -34,41 +36,34 @@ either LITTLE_ENDIAN or BIG_ENDIAN.  Let's see if you were correct.\n");
 
 int main(){
   // initialization
-  Byte rk[16*17], c[16], mk[32];
+  Byte roundkey[16*17], crypt_value[16], key[32];
   int i;
 
-  Byte p[16] = {0};
+  Byte plain_text[16] = {0};
 
-  init(NUMBER); /* checking platform */
+  init(); /* checking platform */
 
   for (i=0; i<16; i++)
-    mk[i]=i*0x11;
+    key[i]=i*0x11;
   for (i=16; i<24; i++)
-    mk[i]=(i-16)*0x11;
+    key[i]=(i-16)*0x11;
 
   // encryption
-  Crypt(p, EncKeySetup(mk, rk, 192), rk, c);
+  Crypt(plain_text, EncKeySetup(key, roundkey, 192), roundkey, crypt_value);
   printf("BEGIN testing basic encryption...\n");
-  printf("Testing whether the encryption would come out correctly, \
-for 14-round ARIA.\n");
-  printf("key      : "); printBlockOfLength(mk, 24); printf("\n");
-  printf("plaintext: "); printBlock(p); printf("\n");
-  printf("result is: "); printBlock(c); printf("\n");
-  printf("should be: "); printBlock((Byte *)cryptResult); printf("\n");
+  printf("key      : "); printBlockOfLength(key, 24); printf("\n");
+  printf("plaintext: "); printBlock(plain_text); printf("\n");
+  printf("result is: "); printBlock(c); printf("\n\n");
 
 
   printf("BEGIN testing the roundtrip...\n");
-  printf("For key size of 192 bits, starting with \
-the zero plaintext and the zero key, let's see if \
-we may recover the plaintext by decrypting the \
-encrypted ciphertext.\n");
-  EncKeySetup(mk, rk, 192);
-  printf("plaintext : "); printBlock(p); printf("\n");
-  Crypt(p, 14, rk,c);
-  printf("ciphertext: "); printBlock(c); printf("\n");
-  DecKeySetup(mk, rk, 192);
-  Crypt(c, 14, rk, p);
-  printf("decrypted : "); printBlock(p); printf("\n");
+  EncKeySetup(key, roundkey, 192);
+  printf("plaintext : "); printBlock(plain_text); printf("\n");
+  Crypt(plain_text, 14, roundkey, crypt_value);
+  printf("ciphertext: "); printBlock(crypt_value); printf("\n");
+  DecKeySetup(key, roundkey, 192);
+  Crypt(crypt_value, 14, roundkey, plain_text);
+  printf("decrypted : "); printBlock(plain_text); printf("\n");
 
   return 0;
 }
