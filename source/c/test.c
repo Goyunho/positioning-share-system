@@ -5,33 +5,33 @@
 
 
 void init(){
-  Byte *b;
-  const Word NUMBER=0x00000042;
+    Byte *b;
+    const Word NUMBER=0x00000042;
 
-  printf("BEGIN testing endianness...\n");
-  printf("Since you are running this, it means that you have defined \
-either LITTLE_ENDIAN or BIG_ENDIAN.  Let's see if you were correct.\n");
-  b=(Byte *)(&NUMBER);
-  if (b[0]==0x42) {
-#undef BIG_ENDIAN
-    printf("We are on LITTLE_ENDIAN platform.\n");
-#ifdef BIG_ENDIAN
-    printf("WARNING: BIG_ENDIAN defined on LITTLE_ENDIAN platform.\n");
-    printf("         You should define LITTLE_ENDIAN instead of BIG_ENDIAN.\n");
-#else
-    printf("Okay.  You were correct.\n");
-#endif
-  } else {
-#undef LITTLE_ENDIAN
-    printf("We are on BIG_ENDIAN platform.\n");
-#ifdef LITTLE_ENDIAN
-    printf("WARNING: LITTLE_ENDIAN defined on BIG_ENDIAN platform.\n");
-    printf("         You should define BIG_ENDIAN instead of LITTLE_ENDIAN.\n");
-#else
-    printf("Okay.  You were correct.\n");
-#endif
-  }
-  printf("END   testing endianness.\n\n");
+    printf("BEGIN testing endianness...\n");
+    printf("Since you are running this, it means that you have defined \
+  either LITTLE_ENDIAN or BIG_ENDIAN.  Let's see if you were correct.\n");
+    b=(Byte *)(&NUMBER);
+    if (b[0]==0x42) {
+  #undef BIG_ENDIAN
+      printf("We are on LITTLE_ENDIAN platform.\n");
+  #ifdef BIG_ENDIAN
+      printf("WARNING: BIG_ENDIAN defined on LITTLE_ENDIAN platform.\n");
+      printf("         You should define LITTLE_ENDIAN instead of BIG_ENDIAN.\n");
+  #else
+      printf("Okay.  You were correct.\n");
+  #endif
+    } else {
+  #undef LITTLE_ENDIAN
+      printf("We are on BIG_ENDIAN platform.\n");
+  #ifdef LITTLE_ENDIAN
+      printf("WARNING: LITTLE_ENDIAN defined on BIG_ENDIAN platform.\n");
+      printf("         You should define BIG_ENDIAN instead of LITTLE_ENDIAN.\n");
+  #else
+      printf("Okay.  You were correct.\n");
+  #endif
+    }
+    printf("END   testing endianness.\n\n");
 }
 
 int main(){

@@ -1,7 +1,7 @@
 # server side source
 
 # socket 과 select 모듈 임포트
-from basicNet import BasicNet
+from BasicNet import BasicNet
 
 
 # Server class
