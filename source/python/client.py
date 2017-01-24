@@ -8,7 +8,7 @@ import time
 # client class
 class Client(BasicNet):
     def __init__(self, host, port, buffersize):
-        super.__init__(self, host, port, buffersize)
+        super().__init__(host, port, buffersize)
         self.socket.connect(self.addr)
 
     def run(self):

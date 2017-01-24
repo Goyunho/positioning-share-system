@@ -7,7 +7,7 @@ from BasicNet import BasicNet
 # Server class
 class Server(BasicNet):
     def __init__(self, host, port, buffersize):
-        super.__init__(self, host, port, buffersize)
+        super().__init__(host, port, buffersize)
         self.socket.bind(self.addr)
 
     def run(self):
