@@ -1,6 +1,6 @@
 # server side source
 
-# socket °ú select ¸ğµâ ÀÓÆ÷Æ®
+# socket ê³¼ select ëª¨ë“ˆ ì„í¬íŠ¸
 from BasicNet import BasicNet
 
 
@@ -19,7 +19,7 @@ class Server(BasicNet):
                 data=conn.recv(1024)
                 if not data: break
                 print("Received data from", addr, repr(data))
-                conn.send(b"ok") #¹ŞÀº µ¥ÀÌÅÍ¸¦ ±×´ë·Î Å¬¶óÀÌ¾ğÆ®¿¡ Àü¼Û
+                conn.send(b"ok") #ë°›ì€ ë°ì´í„°ë¥¼ ê·¸ëŒ€ë¡œ í´ë¼ì´ì–¸íŠ¸ì— ì „ì†¡
         except KeyboardInterrupt :
             return
 
