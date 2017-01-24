@@ -1,6 +1,6 @@
 # client side source
 
-# socket ê³¼ select ëª¨ë“ˆ ì„í¬íŠ¸
+# socket °ú select ¸ğµâ ÀÓÆ÷Æ®
 from BasicNet import BasicNet
 import time
 
@@ -14,8 +14,8 @@ class Client(BasicNet):
     def run(self):
         while True:
             try:
-                self.socket.send(b'Hello, python : ') #ë¬¸ìë¥¼ ë³´ëƒ„
-                data=self.socket.recv(1024) #ì„œë²„ë¡œ ë¶€í„° ì •ë³´ë¥¼ ë°›ìŒ
+                self.socket.send(b'Hello, python : ') #¹®ÀÚ¸¦ º¸³¿
+                data=self.socket.recv(1024) #¼­¹ö·Î ºÎÅÍ Á¤º¸¸¦ ¹ŞÀ½
                 print('Received',repr(data))
                 time.sleep(2)
             except KeyboardInterrupt :

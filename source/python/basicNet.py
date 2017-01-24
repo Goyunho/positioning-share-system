@@ -1,5 +1,5 @@
-# serverì™€ client ê³µí†µìœ¼ë¡œ ì ìš©ë˜ëŠ” ë¶€ë¶„
-# socket ê³¼ select ëª¨ë“ˆ ì„í¬íŠ¸
+# server¿Í client °øÅëÀ¸·Î Àû¿ëµÇ´Â ºÎºĞ
+# socket °ú select ¸ğµâ ÀÓÆ÷Æ®
 from socket import *
 #from select import *
 import sys
