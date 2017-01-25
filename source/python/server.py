@@ -62,7 +62,7 @@ def saveFileProcess(conn, ID, filename):
         conn.send(b'3')
         return
     try:
-        with open("./files/"+str(ID)+"_"+filename, "wb") as f:
+        with open("./files/"+str(int.from_bytes(ID, 'big'))+"_"+filename, "wb") as f:
             while data:
                 f.write(data)
                 conn.send(b'0')
@@ -74,7 +74,7 @@ def saveFileProcess(conn, ID, filename):
         conn.send(b'0')
 
 def sendFileProcess(conn, ID, filename):
-    with open("./files/"+str(ID)+"_"+filename, 'wb') as f:
+    with open("./files/"+str(int.from_bytes(ID, 'big'))+"_"+filename, 'wb') as f:
         while True:
             block = f.read(16)
             if not block : break
