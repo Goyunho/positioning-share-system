@@ -65,7 +65,7 @@ void save_file(SOCKET client_socket, Byte key[KEY], char file_path[PATH_SIZE]){
     FILE* file;
     char* i;
 
-    send_struct(client_socket, '0', 0x01000000, file_path);
+    send_struct(client_socket, '0', 1, file_path);
     EncKeySetup(key, roundkey, 192);
     file = fopen(file_path, "rb");
     for(i=fgets(plain_text, BLOCK_SIZE, (FILE*)file) ; i != NULL ; i=fgets(plain_text, BLOCK_SIZE, (FILE*)file)){
@@ -86,11 +86,11 @@ void load_file(SOCKET client_socket, Byte key[KEY], char filename[PATH_SIZE]){
     Byte plain_text[BLOCK_SIZE], crypt_value[BLOCK_SIZE];
     FILE* file;
 
-    send_struct(client_socket, 0x01, 0x00000001, filename);
+    send_struct(client_socket, 0x01, 0x01, filename);
     file = fopen(strcat("./download/", filename), "wb");
     DecKeySetup(key, roundkey, 192);
     for(;;){
-        send(client_socket, "")
+        //send(client_socket, "");
         Crypt(crypt_value, 14, roundkey, plain_text);
     }
     printf("decrypted : "); printBlock(plain_text); printf("\n");

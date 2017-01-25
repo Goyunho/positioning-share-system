@@ -27,7 +27,7 @@ class Server(BasicNet):
         print('Connected by', addr)
         try:
             data=conn.recv(1024)
-            if not data: break
+            if not data: return
             print("Received data from", addr, repr(data))
             #conn.send(data_process(data))
             data_process(conn, data)
@@ -47,9 +47,9 @@ def data_process(conn, data):
     print('sign : ', repr(sign))
     print('ID : ', repr(ID))
     print('filename : ', repr(filename))
-    if sign == '0': # save file
+    if sign == b'0': # save file
         saveFileProcess(conn, ID, filename)
-    elif sign == '1': # send file
+    elif sign == b'1': # send file
         sendFileProcess(conn, ID, filename)
     else:
         conn.send(b'1') # 0: datastruct error!
@@ -62,7 +62,7 @@ def saveFileProcess(conn, ID, filename):
         conn.send(b'no data')
         return
     try:
-        with open("".join("./files/", ID, "_", filename), "wb") as f:
+        with open(("./files/", ID, "_", filename).join(""), "wb") as f:
             while data:
                 f.write(data)
                 conn.send(b'0')
@@ -70,10 +70,10 @@ def saveFileProcess(conn, ID, filename):
     except:
         conn.send(('error! ' + Exception).encode())
     else:
-        conn.send(b'0)
+        conn.send(b'0')
 
 def sendFileProcess(conn, ID, filename):
-    with open("".join("./files/", ID, "_", filename), wb) as f:
+    with open(("./files/", ID, "_", filename).join(""), 'wb') as f:
         while True:
             block = f.read(16)
             if not block : break
