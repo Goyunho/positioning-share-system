@@ -32,10 +32,10 @@ class Server(BasicNet):
                 print("Received data from", addr, repr(data))
                 #conn.send(data_process(data))
                 data_process(conn, data)
-        except KeyboardInterrupt :
-            return
+            except KeyboardInterrupt :
+                return
 
-def data_process(data, conn):
+def data_process(conn, data):
     datastruct = {
         'sign': 1,
         'ID' : 4,
@@ -46,9 +46,9 @@ def data_process(data, conn):
     ID = info[1]
     filename = info[2]
     if sign == 0: # save file
-        saveFileProcess(conn, info)
+        saveFileProcess(conn, ID, filename)
     elif sign == 1: # send file
-        sendFileProcess(conn, info)
+        sendFileProcess(conn, ID, filename)
     else:
         conn.send(b'error! check struct')
 
