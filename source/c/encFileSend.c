@@ -37,12 +37,14 @@ void init(){
 
 void send_struct(SOCKET client_socket, Byte sign, int ID, char filename[PATH_SIZE]){
     Byte info[1+4+256] = {0};
+    int state = 0; // 0: datastruct error!
 
     *(info) = sign;
     *(info+1) = ID;
     *(info+1+4) = filename;
 
     send(client_socket, info, sizeof(info), 0);
+    recv(client_socket, state, 4, 0);
 }
 
 void save_file(SOCKET client_socket, Byte key[KEY], char file_path[PATH_SIZE]){
@@ -53,6 +55,7 @@ void save_file(SOCKET client_socket, Byte key[KEY], char file_path[PATH_SIZE]){
     char* i;
 
     send_struct(client_socket, 0x00, 0x00000001, file_path);
+    /*
     EncKeySetup(key, roundkey, 192);
     file = fopen(file_path, "rb");
     for(i=fgets(plain_text, BLOCK_SIZE, (FILE*)file) ; i != NULL ; i=fgets(plain_text, BLOCK_SIZE, (FILE*)file)){
@@ -65,7 +68,7 @@ void save_file(SOCKET client_socket, Byte key[KEY], char file_path[PATH_SIZE]){
         if(recv_sign == NULL){
             exit(0);
         }
-    }
+    }*/
 }
 /*
 void load_file(SOCKET client_socket, Byte key[KEY], char filename[PATH_SIZE]){

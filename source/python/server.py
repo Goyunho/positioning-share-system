@@ -50,7 +50,7 @@ def data_process(conn, data):
     elif sign == 0x01: # send file
         sendFileProcess(conn, ID, filename)
     else:
-        conn.send(b'error! check struct')
+        conn.send(0) # 0: datastruct error!
 
 
 def saveFileProcess(conn, ID, filename):
