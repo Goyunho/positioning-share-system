@@ -45,9 +45,9 @@ def data_process(conn, data):
     sign = info[0]
     ID = info[1]
     filename = info[2]
-    if sign == 0: # save file
+    if sign == 0x00: # save file
         saveFileProcess(conn, ID, filename)
-    elif sign == 1: # send file
+    elif sign == 0x01: # send file
         sendFileProcess(conn, ID, filename)
     else:
         conn.send(b'error! check struct')
