@@ -59,7 +59,7 @@ def saveFileProcess(conn, ID, filename):
     conn.send(b'0') # ok sign
     data = conn.recv(BUFFERSIZE)
     if not data :
-        conn.send(b'no data')
+        conn.send(b'3')
         return
     try:
         with open("./files/"+str(ID)+"_"+filename, "wb") as f:
@@ -68,6 +68,7 @@ def saveFileProcess(conn, ID, filename):
                 conn.send(b'0')
                 data = conn.recv(BUFFERSIZE)
     except:
+        print(Exception)
         conn.send(b'2') # save process error!
     else:
         conn.send(b'0')
