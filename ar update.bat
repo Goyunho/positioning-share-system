@@ -1,2 +1,2 @@
 cd lib
-ar rs libchiper.a aria.o
+ar rs libset.a aria.c sockcomm.c

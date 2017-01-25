@@ -2,7 +2,18 @@
 
 # socket 과 select 모듈 임포트
 from BasicNet import BasicNet
+import sqlite3
 
+BUFFERSIZE = 1024
+
+def slice_list(llist, slice_index:list):
+    if len(slice_index) == 0:
+        return [llist]
+    elif slice_index[0] == None:
+        return [llist]
+    elif slice_index[0] > len(llist):
+        return [llist]
+    return [llist[:slice_index[0]]] + slice_list(llist[slice_index[0]:], slice_index[1:])
 
 # Server class
 class Server(BasicNet):
@@ -14,20 +25,66 @@ class Server(BasicNet):
         self.socket.listen(1)
         conn, addr = self.socket.accept()
         print('Connected by', addr)
-        try:
-            while True:
+        while True:
+            try:
                 data=conn.recv(1024)
                 if not data: break
                 print("Received data from", addr, repr(data))
-                conn.send(b"ok") #받은 데이터를 그대로 클라이언트에 전송
+                #conn.send(data_process(data))
+                data_process(conn, data)
         except KeyboardInterrupt :
             return
 
+def data_process(data, conn):
+    datastruct = {
+        'sign': 1,
+        'ID' : 4,
+        'filename' : 256
+    }
+    info = slice_list(data, [1,4,256])
+    sign = info[0]
+    ID = info[1]
+    filename = info[2]
+    if sign == 0: # save file
+        saveFileProcess(conn, info)
+    elif sign == 1: # send file
+        sendFileProcess(conn, info)
+    else:
+        conn.send(b'error! check struct')
+
+
+def saveFileProcess(conn, ID, filename):
+    conn.send(b'ok')
+    data = conn.recv(BUFFERSIZE)
+    if not data :
+        conn.send(b'no data')
+        return
+    try:
+        with open("".join("./files/", ID, "_", filename), "wb") as f:
+            while data:
+                f.write(data)
+                conn.send(b'ok')
+                data = conn.recv(BUFFERSIZE)
+    except:
+        conn.send(('error! ' + Exception).encode())
+    else:
+        conn.send(('ok').encode())
+
+def sendFileProcess(conn, ID, filename):
+    with open("".join("./files/", ID, "_", filename), wb) as f:
+        while True:
+            block = f.read(16)
+            if not block : break
+            conn.send(block)
 
 if __name__ == '__main__':
-    ser = Server('', 9000, 255*32)
+    ser = Server('', 9000, 1024*4)
     print("socket is ready.")
     print("run...")
-    ser.run()
+    while True:
+        try:
+            ser.run()
+        except KeyboardInterrupt :
+            break
     ser.close()
     print("closed.")

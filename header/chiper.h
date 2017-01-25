@@ -1,6 +1,12 @@
 typedef unsigned char Byte;
 typedef unsigned int  Word;
 
+#define BLOCK_SIZE 16
+#define ROUND_KEY 16*17
+#define KEY 32
+#define KEY_BIT 192              /* size : 16(128bit), 24(192bit), 32(256bit) */
+#define KEY_BYTE KEY_BIT/8
+
 void printBlockOfLength(Byte *b, int len);
 void printBlock(Byte *b);
 

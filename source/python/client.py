@@ -23,7 +23,7 @@ class Client(BasicNet):
 
 
 if __name__ == '__main__':
-    cli = Client('127.0.0.1', 9001, 255*32)
+    cli = Client('127.0.0.1', 9001, 1024*4)
     print("connecting server...")
     try:
         cli.run()
