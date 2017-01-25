@@ -62,19 +62,19 @@ def saveFileProcess(conn, ID, filename):
         conn.send(b'3')
         return
     try:
-        with open("./files/"+str(int.from_bytes(ID, 'big'))+"_"+filename, "wb") as f:
+        with open("./files/"+str(int.from_bytes(ID, 'big'))+"_"+str(filename.split(b'\x00')[0]), "wb") as f:
             while data:
                 f.write(data)
                 conn.send(b'0')
                 data = conn.recv(BUFFERSIZE)
-    except:
-        print(Exception)
+    except Exception as e:
+        print(e)
         conn.send(b'2') # save process error!
     else:
         conn.send(b'0')
 
 def sendFileProcess(conn, ID, filename):
-    with open("./files/"+str(int.from_bytes(ID, 'big'))+"_"+filename, 'wb') as f:
+    with open("./files/"+str(int.from_bytes(ID, 'big'))+"_"+str(filename.split(b'\x00')[0]), 'wb') as f:
         while True:
             block = f.read(16)
             if not block : break
