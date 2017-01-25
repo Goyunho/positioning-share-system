@@ -37,14 +37,19 @@ void init(){
 
 void send_struct(SOCKET client_socket, Byte sign, int ID, char filename[PATH_SIZE]){
     Byte info[1+4+256] = {0};
-    int state = 0; // 0: datastruct error!
+    char* state; // 0: datastruct error!
 
     *(info) = sign;
     *(info+1) = ID;
     *(info+1+4) = filename;
 
     send(client_socket, info, sizeof(info), 0);
-    recv(client_socket, state, 4, 0);
+    recv(client_socket, state, 1, 0);
+    if(*state == '0'){
+        printf("datastruct error!\n");
+        getchar();
+        exit(0);
+    }
 }
 
 void save_file(SOCKET client_socket, Byte key[KEY], char file_path[PATH_SIZE]){
@@ -54,7 +59,7 @@ void save_file(SOCKET client_socket, Byte key[KEY], char file_path[PATH_SIZE]){
     FILE* file;
     char* i;
 
-    send_struct(client_socket, 0x00, 0x00000001, file_path);
+    send_struct(client_socket, '0', 0x00000001, file_path);
     /*
     EncKeySetup(key, roundkey, 192);
     file = fopen(file_path, "rb");
@@ -95,6 +100,8 @@ int main(){
 
     save_file(client_socket, "hi, hello", "./doc/ARIA-testvector.pdf");
     //load_file(client_socket, "hi, hello", "ARIA-testvector.pdf");
+
+    getchar();
 
     return 0;
 }

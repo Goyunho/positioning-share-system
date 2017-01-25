@@ -41,16 +41,17 @@ def data_process(conn, data):
         'ID' : 4,
         'filename' : 256
     }
-    info = slice_list(repr(data), [1,4,256])
+    info = slice_list(data, [1,4,256])
     sign = info[0]
     ID = info[1]
     filename = info[2]
-    if sign == 0x00: # save file
+    print(repr(sign))
+    if sign == '0': # save file
         saveFileProcess(conn, ID, filename)
-    elif sign == 0x01: # send file
+    elif sign == '1': # send file
         sendFileProcess(conn, ID, filename)
     else:
-        conn.send(0) # 0: datastruct error!
+        conn.send(b'0') # 0: datastruct error!
 
 
 def saveFileProcess(conn, ID, filename):
