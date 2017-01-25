@@ -52,7 +52,7 @@ def data_process(conn, data):
     elif sign == b'1': # send file
         sendFileProcess(conn, ID, filename)
     else:
-        conn.send(b'1') # 0: datastruct error!
+        conn.send(b'1') # 1: datastruct error!
 
 
 def saveFileProcess(conn, ID, filename):
@@ -62,18 +62,18 @@ def saveFileProcess(conn, ID, filename):
         conn.send(b'no data')
         return
     try:
-        with open(("./files/", ID, "_", filename).join(""), "wb") as f:
+        with open("./files/"+str(ID)+"_"+filename, "wb") as f:
             while data:
                 f.write(data)
                 conn.send(b'0')
                 data = conn.recv(BUFFERSIZE)
     except:
-        conn.send(('error! ' + Exception).encode())
+        conn.send(b'2') # save process error!
     else:
         conn.send(b'0')
 
 def sendFileProcess(conn, ID, filename):
-    with open(("./files/", ID, "_", filename).join(""), 'wb') as f:
+    with open("./files/"+str(ID)+"_"+filename, 'wb') as f:
         while True:
             block = f.read(16)
             if not block : break

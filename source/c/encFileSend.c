@@ -68,7 +68,7 @@ void save_file(SOCKET client_socket, Byte key[KEY], char file_path[PATH_SIZE]){
     send_struct(client_socket, '0', 1, file_path);
     EncKeySetup(key, roundkey, 192);
     file = fopen(file_path, "rb");
-    for(i=fgets(plain_text, BLOCK_SIZE, (FILE*)file) ; i != NULL ; i=fgets(plain_text, BLOCK_SIZE, (FILE*)file)){
+    /*for(i=fgets(plain_text, BLOCK_SIZE, (FILE*)file) ; i != NULL ; i=fgets(plain_text, BLOCK_SIZE, (FILE*)file)){
         printf("plaintext : "); printBlock(plain_text); printf("\n");
         Crypt(plain_text, 14, roundkey, crypt_value);
         printf("ciphertext: "); printBlock(crypt_value); printf("\n");
@@ -78,7 +78,7 @@ void save_file(SOCKET client_socket, Byte key[KEY], char file_path[PATH_SIZE]){
         if(recv_sign == NULL){
             exit(0);
         }
-    }
+    }*/
 }
 
 void load_file(SOCKET client_socket, Byte key[KEY], char filename[PATH_SIZE]){
@@ -103,7 +103,7 @@ int main(){
     init(); /* checking platform */
     client_socket = sock("127.0.0.1", 9001); /* socket init */
 
-    save_file(client_socket, "hi, hello", "./doc/ARIA-testvector.pdf");
+    save_file(client_socket, "hi, hello", ".\\doc\\ARIA-testvector.pdf");
     //load_file(client_socket, "hi, hello", "ARIA-testvector.pdf");
 
     getchar();
