@@ -36,7 +36,7 @@ void init(){
 }
 
 void send_struct(SOCKET client_socket, Byte sign, int ID, char filename[PATH_SIZE]){
-    Byte info[1+4+256];
+    Byte info[1+4+256] = {0};
 
     *(info) = sign;
     *(info+1) = ID;
@@ -48,7 +48,7 @@ void send_struct(SOCKET client_socket, Byte sign, int ID, char filename[PATH_SIZ
 void save_file(SOCKET client_socket, Byte key[KEY], char file_path[PATH_SIZE]){
     Byte roundkey[ROUND_KEY];
     Byte plain_text[BLOCK_SIZE], crypt_value[BLOCK_SIZE];
-    char recv_sign[10];
+    char recv_sign[10] = {0};
     FILE* file;
     char* i;
 

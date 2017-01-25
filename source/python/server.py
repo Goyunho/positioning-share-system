@@ -41,7 +41,7 @@ def data_process(data, conn):
         'ID' : 4,
         'filename' : 256
     }
-    info = slice_list(data, [1,4,256])
+    info = slice_list(repr(data), [1,4,256])
     sign = info[0]
     ID = info[1]
     filename = info[2]
