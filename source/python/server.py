@@ -25,15 +25,14 @@ class Server(BasicNet):
         self.socket.listen(1)
         conn, addr = self.socket.accept()
         print('Connected by', addr)
-        while True:
-            try:
-                data=conn.recv(1024)
-                if not data: break
-                print("Received data from", addr, repr(data))
-                #conn.send(data_process(data))
-                data_process(conn, data)
-            except KeyboardInterrupt :
-                return
+        try:
+            data=conn.recv(1024)
+            if not data: break
+            print("Received data from", addr, repr(data))
+            #conn.send(data_process(data))
+            data_process(conn, data)
+        except KeyboardInterrupt :
+            return
 
 def data_process(conn, data):
     datastruct = {
@@ -45,17 +44,19 @@ def data_process(conn, data):
     sign = info[0]
     ID = info[1]
     filename = info[2]
-    print(repr(sign))
+    print('sign : ', repr(sign))
+    print('ID : ', repr(ID))
+    print('filename : ', repr(filename))
     if sign == '0': # save file
         saveFileProcess(conn, ID, filename)
     elif sign == '1': # send file
         sendFileProcess(conn, ID, filename)
     else:
-        conn.send(b'0') # 0: datastruct error!
+        conn.send(b'1') # 0: datastruct error!
 
 
 def saveFileProcess(conn, ID, filename):
-    conn.send(b'ok')
+    conn.send(b'0') # ok sign
     data = conn.recv(BUFFERSIZE)
     if not data :
         conn.send(b'no data')
@@ -64,12 +65,12 @@ def saveFileProcess(conn, ID, filename):
         with open("".join("./files/", ID, "_", filename), "wb") as f:
             while data:
                 f.write(data)
-                conn.send(b'ok')
+                conn.send(b'0')
                 data = conn.recv(BUFFERSIZE)
     except:
         conn.send(('error! ' + Exception).encode())
     else:
-        conn.send(('ok').encode())
+        conn.send(b'0)
 
 def sendFileProcess(conn, ID, filename):
     with open("".join("./files/", ID, "_", filename), wb) as f:
