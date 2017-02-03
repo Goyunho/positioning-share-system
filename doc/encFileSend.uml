@@ -1,0 +1,16 @@
+@startuml
+main -> init : : platform checking
+main -> process : ip, port, ID, key, filepath
+process -> process : \
+- SOCKET client_socket = socket() \n\
+- wekmf
+process -> process : \
+
+GPS_node -> Server: Connection try
+GPS_node <-- Server: ok
+GPS_node ->o Server: repeat send node's info
+Server -> Server : node's info insert/update
+
+User -> Server: request : node's info
+User <-- Server: response : node's info
+@enduml
