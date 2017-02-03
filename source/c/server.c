@@ -4,12 +4,14 @@
 #include "sys/socket.h" // UNIX socket
 #include <netinet/in.h>
 
+#define Byte unsigned char
 #define BLOCK_SIZE 16
 #define STREAM_SIZE 256
 #define STATE_SIZE 4
 #define MODE_SIZE 1
 #define FILENAME_SIZE 256
 #define GETINFO_SIZE MODE_SIZE + FILENAME_SIZE
+
 
 void ErrorHandling(char msg[]) {
     printf("%s", msg);
@@ -38,7 +40,7 @@ int sock(int port=9000) {
     return server_fd_listen;
 }
 
-void for_upload(char filename[]) { // client -> server
+void for_upload(int server_fd_connect, char filename[]) { // client -> server
     Byte stream_block[STREAM_SIZE];
     FILE* file;
 
@@ -64,7 +66,7 @@ void for_upload(char filename[]) { // client -> server
     fclose(file);
 }
 
-void for_download(char filename[]) { // client -> server
+void for_download(int server_fd_connect, char filename[]) { // client -> server
     Byte stream_block[STREAM_SIZE];
     char state[STATE_SIZE];
     FILE* file;
@@ -95,18 +97,19 @@ int main(int argc, char *argv[]){
 
     server_fd_listen = sock(9000);
 
-    server_fd_connect = accept(server_fd_listen, NULL, NULL);
+    while(true) {
+        server_fd_connect = accept(server_fd_listen, NULL, NULL);
 
-    recv(server_fd_connect, accept_info, GETINFO_SIZE, 0);
-    if(accept_info[0] == 'u') {
-        for_upload(*(accept_info+1));
+        recv(server_fd_connect, accept_info, GETINFO_SIZE, 0);
+        if(accept_info[0] == 'u') {
+            for_upload(server_fd_connect, accept_info+1);
+        }
+        else if(accept_info[0] == 'd') {
+            for_download(server_fd_connect, accept_info+1);
+        }
+        else {
+            send(server_fd_connect, "no", STATE_SIZE, 0);
+        }
     }
-    else if(accept_info[0] == 'd') {
-        for_download(*(accept_info+1));
-    }
-    else {
-        send(server_fd_connect, "no", STATE_SIZE, 0);
-    }
-
     return 0;
 }
