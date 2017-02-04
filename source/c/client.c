@@ -4,7 +4,7 @@
 #include "sockcomm.h"
 
 #define DEBUG_TEST 1
-#define DEBUG_PRT debug(__LINE__, __func__);
+#define DEBUG_PRT printf("[DEBUG] %d : %s\n", __LINE__, __func__);
 
 typedef struct conf {
     Byte mode; // 0: download, 1: upload
@@ -14,9 +14,6 @@ typedef struct conf {
     int bcm; // block chiper mode of operation
 } CONF;
 
-void debug(int line, const char *funcname) {
-    printf("[DEBUG] %d : %s\n", line, funcname);
-}
 int init(){
 #if DEBUG_TEST
     DEBUG_PRT
@@ -54,16 +51,30 @@ void upload_file(char ip[], int port, char filepath[]) {
     Byte key[KEY] = {0,};
     Byte roundkey[ROUND_KEY];
     Byte plain_block[BLOCK_SIZE], crypt_block[BLOCK_SIZE];
-    FILE* file;
+    FILE *file;
+    char *structur;
     char state[3] = {0,};
-    SOCKET client_socket = sock(ip, port); /* socket init */
+    WSADATA wsaData;
+    SOCKET client_socket;
+
     // send process
+    // connect server
+DEBUG_PRT
+    sock(&client_socket, ip, port); /* socket init */
     // 1. make EncKey
+DEBUG_PRT
     EncKeySetup(key, roundkey, 192);
     // 2. open file
+DEBUG_PRT
     file = fopen(filepath, "rb");
     // 3. request server state
-    send(client_socket, strcat("u", filepath), strlen(filepath), 0);
+    structur = (char*)malloc(strlen(filepath)+2);
+    strcpy(structur, "u");
+    strcat(structur, filepath);
+    printf("try connection!\n");
+    send(client_socket, structur, strlen(structur), 0);
+    recv(client_socket, state, 2, 0);
+    if(!strcmp(state, "ok")) printf("connect complite!\n");
     // 4. send file after block encrypt
     while(!strcmp(state, "ok")) {
         // encryption block
@@ -72,6 +83,7 @@ void upload_file(char ip[], int port, char filepath[]) {
         send(client_socket, plain_block, BLOCK_SIZE, 0);
         recv(client_socket, state, 2, 0);
     }
+    free(structur);
     fclose(file);
     closesocket(client_socket);
     printf("%s\n", "done");
@@ -84,18 +96,22 @@ void download_file(char ip[], int port, char filepath[]) {
     Byte key[KEY] = {0,};
     Byte roundkey[ROUND_KEY];
     Byte plain_block[BLOCK_SIZE], crypt_block[BLOCK_SIZE];
-    FILE* file;
-
-    SOCKET client_socket = sock(ip, port); /* socket init */
+    char *structur;
+    FILE *file;
+    SOCKET client_socket;
 
     // download process
+    sock(&client_socket, ip, port); /* socket init */
     // 1. init crypt platform & make DecKey
     init(); /* checking platform for encryption environment */
     DecKeySetup(key, roundkey, 192);
     // 2. open file
-    file = fopen(strcat("./download/", filepath), "wb");
+    file = fopen(filepath, "wb");
     // 3. request file to server
-    send(client_socket, strcat("d", filepath), strlen(filepath), 0);
+    structur = (char*)malloc(strlen(filepath)+2);
+    strcpy(structur, "d");
+    strcat(structur, filepath);
+    send(client_socket, structur, strlen(structur), 0);
     // 4. recv encrypted file
     while(recv(client_socket, crypt_block, BLOCK_SIZE, 0)) {
         // decryption block
@@ -103,6 +119,7 @@ void download_file(char ip[], int port, char filepath[]) {
         fwrite(plain_block, 1, BLOCK_SIZE, file);
         send(client_socket, "ok", 2, 0);
     }
+    free(structur);
     fclose(file);
     closesocket(client_socket);
     printf("%s\n", "done");
@@ -115,6 +132,9 @@ void set_conf(CONF* conf, int argc, char *argv[]){
     // set mode
     if(!strcmp(argv[1], "-dl")) conf->mode = 0; // download mode
     else if(!strcmp(argv[1], "-ul")) conf->mode = 1; // upload mode
+    else {
+        printf("error! check arrt 2. -dl|-ul is right\n");
+    }
     // set ip
     strcpy(conf->ip, strtok(argv[2], ":"));
     // set port

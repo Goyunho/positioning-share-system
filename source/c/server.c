@@ -1,10 +1,13 @@
 #include <stdio.h>
+#include <stdlib.h> // exit()
 #include <string.h>
 #include "sys/types.h"
 #include "sys/socket.h" // UNIX socket
 #include <netinet/in.h>
 
 #define Byte unsigned char
+#define true 1
+#define false 0
 #define BLOCK_SIZE 16
 #define STREAM_SIZE 256
 #define STATE_SIZE 4
@@ -12,22 +15,26 @@
 #define FILENAME_SIZE 256
 #define GETINFO_SIZE MODE_SIZE + FILENAME_SIZE
 
+#define DEBUG_TEST 1
+#define DEBUG_PRT printf("[DEBUG] %d : %s\n", __LINE__, __func__);
 
 void ErrorHandling(char msg[]) {
     printf("%s", msg);
     exit(0);
 }
 
-int sock(int port=9000) {
+int sock(int port) {
     int server_fd_listen;
-    struct sockaddr_in server = {AF_INET, port, INADDR_ANY}
+    struct sockaddr_in server; // = {AF_INET, port, INADDR_ANY};
+
+    memset( &server, 0, sizeof( server));
+    server.sin_family = AF_INET;
+    server.sin_port = port; //htons(port);
+    server.sin_addr.s_addr = INADDR_ANY; //htonl(INADDR_ANY);
 
     // create socket
     if((server_fd_listen = socket(AF_INET, SOCK_STREAM, 0)) == -1)
         ErrorHandling("Server : Can't open stream socket\n");
-
-    // initialize server_Addr as NULL
-    memset(&socket, 0x00, sizeof(server));
 
     // call bind()
     if(bind(server_fd_listen, (struct sockaddr *)&server, sizeof(server)) <0)
@@ -37,6 +44,7 @@ int sock(int port=9000) {
     if(listen(server_fd_listen, 5) < 0)
         ErrorHandling("Server : Can't listening connect.\n");
 
+    printf("created socket!\n");
     return server_fd_listen;
 }
 
@@ -62,7 +70,7 @@ void for_upload(int server_fd_connect, char filename[]) { // client -> server
     }
 
     // finish process
-    close(sockfd_connect);
+    close(server_fd_connect);
     fclose(file);
 }
 
@@ -86,7 +94,7 @@ void for_download(int server_fd_connect, char filename[]) { // client -> server
     }
 
     // finish process
-    close(sockfd_connect);
+    close(server_fd_connect);
     fclose(file);
 }
 
@@ -98,7 +106,9 @@ int main(int argc, char *argv[]){
     server_fd_listen = sock(9000);
 
     while(true) {
+        printf("ready!\n");
         server_fd_connect = accept(server_fd_listen, NULL, NULL);
+        printf("connection!\n");
 
         recv(server_fd_connect, accept_info, GETINFO_SIZE, 0);
         if(accept_info[0] == 'u') {

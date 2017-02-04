@@ -1,2 +1,2 @@
-start "ar update.bat"
-start "main compile.bat"
+start arUpdate.bat
+start compile.bat
